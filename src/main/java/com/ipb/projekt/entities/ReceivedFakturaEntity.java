@@ -3,9 +3,10 @@ package com.ipb.projekt.entities;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Collection;
 
 @Entity
-@Table(name = "received_faktura", schema = "mas")
+@Table(name = "received_faktura", schema = "public")
 public class ReceivedFakturaEntity {
     @Id
     @Column(name = "id_received_faktura")
@@ -28,15 +29,20 @@ public class ReceivedFakturaEntity {
     @Column(name = "scanned_image_path", nullable = false)
     private String scannedImagePath;
 
+    @OneToMany(mappedBy = "receivedFakturaEntity")
+    private Collection<ProductEntity> productEntities;
+
     public ReceivedFakturaEntity() {
     }
 
     public ReceivedFakturaEntity(String fakturaNumber, LocalDate date,
-                                 LocalTime time, String scannedImagePath) {
+                                 LocalTime time, String scannedImagePath,
+                                 Collection<ProductEntity> productEntities) {
         this.fakturaNumber = fakturaNumber;
         this.date = date;
         this.time = time;
         this.scannedImagePath = scannedImagePath;
+        this.productEntities = productEntities;
     }
 
     public int getIdReceivedFaktura() {
@@ -77,5 +83,13 @@ public class ReceivedFakturaEntity {
 
     public void setScannedImagePath(String scannedImagePath) {
         this.scannedImagePath = scannedImagePath;
+    }
+
+    public Collection<ProductEntity> getProductEntities() {
+        return productEntities;
+    }
+
+    public void setProductEntities(Collection<ProductEntity> productEntities) {
+        this.productEntities = productEntities;
     }
 }

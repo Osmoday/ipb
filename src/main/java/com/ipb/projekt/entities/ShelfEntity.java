@@ -3,7 +3,7 @@ package com.ipb.projekt.entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "shelf", schema = "mas")
+@Table(name = "shelf", schema = "public")
 public class ShelfEntity {
     @Id
     @Column(name = "id_shelf")
@@ -11,16 +11,20 @@ public class ShelfEntity {
     private int idShelf;
 
     @Basic(optional = false)
-    @Column(name = "column", nullable = false)
+    @Column(name = "c", nullable = false)
     private int column;
 
     @Basic(optional = false)
-    @Column(name = "row", nullable = false)
+    @Column(name = "r", nullable = false)
     private int row;
 
     @Basic(optional = false)
-    @Column(name = "level", nullable = false)
+    @Column(name = "l", nullable = false)
     private int level;
+
+    @OneToOne
+    @JoinColumn(name = "id_product")
+    private ProductEntity productEntity;
 
     public ShelfEntity() {
     }
@@ -61,5 +65,13 @@ public class ShelfEntity {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public ProductEntity getProductEntity() {
+        return productEntity;
+    }
+
+    public void setProductEntity(ProductEntity productEntity) {
+        this.productEntity = productEntity;
     }
 }

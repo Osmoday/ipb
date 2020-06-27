@@ -1,9 +1,10 @@
 package com.ipb.projekt.entities;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
-@Table(name = "product", schema = "mas")
+@Table(name = "product", schema = "public")
 public class ProductEntity {
     @Id
     @Column(name = "id_product")
@@ -26,6 +27,18 @@ public class ProductEntity {
     @Basic(optional = false)
     @Column(name = "status", nullable = false)
     private String status;
+
+    @ManyToOne
+    @JoinColumn(name = "id_received_faktura")
+    private ReceivedFakturaEntity receivedFakturaEntity;
+
+    @OneToOne
+    @JoinColumn(name = "id_shelf")
+    private ShelfEntity shelfEntity;
+
+    @ManyToOne
+    @JoinColumn(name = "id_sale")
+    private SaleEntity saleEntity;
 
     public ProductEntity() {
     }
@@ -75,5 +88,29 @@ public class ProductEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public ReceivedFakturaEntity getReceivedFakturaEntity() {
+        return receivedFakturaEntity;
+    }
+
+    public void setReceivedFakturaEntity(ReceivedFakturaEntity receivedFakturaEntity) {
+        this.receivedFakturaEntity = receivedFakturaEntity;
+    }
+
+    public ShelfEntity getShelfEntity() {
+        return shelfEntity;
+    }
+
+    public void setShelfEntity(ShelfEntity shelfEntity) {
+        this.shelfEntity = shelfEntity;
+    }
+
+    public SaleEntity getSaleEntity() {
+        return saleEntity;
+    }
+
+    public void setSaleEntity(SaleEntity saleEntity) {
+        this.saleEntity = saleEntity;
     }
 }

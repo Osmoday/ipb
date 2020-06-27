@@ -1,9 +1,10 @@
 package com.ipb.projekt.entities;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
-@Table(name = "client", schema = "mas")
+@Table(name = "client", schema = "public")
 public class ClientEntity {
     @Id
     @Column(name = "id_client")
@@ -21,6 +22,9 @@ public class ClientEntity {
     @Basic(optional = true)
     @Column(name = "nip", nullable = true)
     private String NIP;
+
+    @OneToMany(mappedBy = "clientEntity")
+    private Collection<SaleEntity> saleEntities;
 
     public ClientEntity() {
     }
@@ -61,5 +65,13 @@ public class ClientEntity {
 
     public void setNIP(String NIP) {
         this.NIP = NIP;
+    }
+
+    public Collection<SaleEntity> getSaleEntities() {
+        return saleEntities;
+    }
+
+    public void setSaleEntities(Collection<SaleEntity> saleEntities) {
+        this.saleEntities = saleEntities;
     }
 }

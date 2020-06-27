@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
-@Table(name = "created_faktura", schema = "mas")
+@Table(name = "created_faktura", schema = "public")
 public class CreatedFakturaEntity {
     //TODO: powinno raczej dziedziczyć z jakiejś wspólnej klasy dla obu faktur, ale nie mamy tak w dokumentacji
     @Id
@@ -29,15 +29,20 @@ public class CreatedFakturaEntity {
     @Column(name = "scanned_image_path", nullable = false)
     private String scannedImagePath;
 
+    @OneToOne
+    @JoinColumn(name = "id_sale")
+    private SaleEntity saleEntity;
+
     public CreatedFakturaEntity() {
     }
 
     public CreatedFakturaEntity(String fakturaNumber, LocalDate date,
-                                LocalTime time, String scannedImagePath) {
+                                LocalTime time, String scannedImagePath, SaleEntity saleEntity) {
         this.fakturaNumber = fakturaNumber;
         this.date = date;
         this.time = time;
         this.scannedImagePath = scannedImagePath;
+        this.saleEntity = saleEntity;
     }
 
     public int getIdCreatedFaktura() {
@@ -78,5 +83,13 @@ public class CreatedFakturaEntity {
 
     public void setScannedImagePath(String scannedImagePath) {
         this.scannedImagePath = scannedImagePath;
+    }
+
+    public SaleEntity getSaleEntity() {
+        return saleEntity;
+    }
+
+    public void setSaleEntity(SaleEntity saleEntity) {
+        this.saleEntity = saleEntity;
     }
 }

@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "annex", schema = "mas")
+@Table(name = "annex", schema = "public")
 public class AnnexEntity {
 
     @Id
@@ -20,12 +20,17 @@ public class AnnexEntity {
     @Column(name = "info", nullable = false)
     private String info;
 
+    @OneToOne
+    @JoinColumn(name = "id_sale")
+    private SaleEntity saleEntity;
+
     public AnnexEntity() {
     }
 
-    public AnnexEntity(LocalDate date, String info) {
+    public AnnexEntity(LocalDate date, String info, SaleEntity saleEntity) {
         this.date = date;
         this.info = info;
+        this.saleEntity = saleEntity;
     }
 
     public int getIdAnnex() {
@@ -50,5 +55,13 @@ public class AnnexEntity {
 
     public void setInfo(String info) {
         this.info = info;
+    }
+
+    public SaleEntity getSaleEntity() {
+        return saleEntity;
+    }
+
+    public void setSaleEntity(SaleEntity saleEntity) {
+        this.saleEntity = saleEntity;
     }
 }
