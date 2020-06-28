@@ -1,7 +1,5 @@
 package com.ipb.projekt.services;
 
-import com.ipb.projekt.entities.CreatedFakturaEntity;
-import com.ipb.projekt.entities.ReceivedFakturaEntity;
 import com.ipb.projekt.repos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
