@@ -1,6 +1,7 @@
 package com.ipb.projekt.services;
 
 import com.ipb.projekt.entities.*;
+import com.ipb.projekt.exceptions.NoShelfException;
 import com.ipb.projekt.repos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -97,8 +98,11 @@ public class ProductManagementService {
         ShelfEntity choicedShelf = null;//temporary null
 
         //-------------
+        try {
+            putProductOnShelf(product,choicedShelf.getIdShelf());
+        }catch(NoShelfException e){e.printStackTrace();}
         choicedShelf.setProductEntity(product);
-        product.setShelfEntity(choicedShelf);
+        shelfRepo.save(choicedShelf); //TODO: upewnić się że przypisanie na zmienną "choicedShelf" shelfa nie spowoduje duplikacji.
     }
 
     public ProductEntity searchForProduct(String name,String manufacturer, String serialNumber) throws Exception {
@@ -150,14 +154,8 @@ public class ProductManagementService {
         createdFakturaRepo.save(faktura);
     }
 
-    public void CreateMagazyn()
+    public void CreateMagazyn(int columns,int rows, int levels)
     {
-
-        // TODO: make this not hardcoded
-        int levels = 3;
-        int columns = 11;
-        int rows = 8;
-        //---------
         ShelfEntity newShelf;
         for(int c =0;c<columns;c++)
         {
@@ -174,11 +172,10 @@ public class ProductManagementService {
 
     }
 
-    // TODO: make this throw a custom exception
-    public void putProductOnShelf(ProductEntity e, int idShelf) throws Exception {
+    public void putProductOnShelf(ProductEntity e, int idShelf) throws NoShelfException {
         Optional<ShelfEntity> shelf = this.shelfRepo.findById(idShelf);
         e.setShelfEntity(shelf.orElseThrow(
-                () -> new Exception("Shelf with id "+idShelf+" doesn't exist")
+                () -> new NoShelfException("Shelf with id "+idShelf+" doesn't exist")
         ));
         productRepo.save(e);
     }
