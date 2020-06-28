@@ -10,6 +10,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 @Service
 public class ProductManagementService {
@@ -150,7 +152,8 @@ public class ProductManagementService {
 
     public void CreateMagazyn()
     {
-        //hardcode
+
+        // TODO: make this not hardcoded
         int levels = 3;
         int columns = 11;
         int rows = 8;
@@ -169,6 +172,15 @@ public class ProductManagementService {
         }
 
 
+    }
+
+    // TODO: make this throw a custom exception
+    public void putProductOnShelf(ProductEntity e, int idShelf) throws Exception {
+        Optional<ShelfEntity> shelf = this.shelfRepo.findById(idShelf);
+        e.setShelfEntity(shelf.orElseThrow(
+                () -> new Exception("Shelf with id "+idShelf+" doesn't exist")
+        ));
+        productRepo.save(e);
     }
 
 
