@@ -74,4 +74,25 @@ public class ShelfEntity {
     public void setProductEntity(ProductEntity productEntity) {
         this.productEntity = productEntity;
     }
+
+    public String getCssTags() {
+        String result = "";
+        if (this.productEntity == null) {
+            switch (this.level) {
+                case 0:
+                    result += "crossed0 ";
+                    break;
+                case 1:
+                    result += "crossed1 ";
+                    break;
+                case 2:
+                    result += "crossed2 ";
+                    break;
+            }
+        } else {
+            result += "empty_shelf ";
+        }
+        result += "shelf c"+this.column+" r"+this.row+" l"+this.level;
+        return result;
+    }
 }

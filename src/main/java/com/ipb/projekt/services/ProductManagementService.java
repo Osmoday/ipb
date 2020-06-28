@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 @Service
 public class ProductManagementService {
@@ -170,7 +169,7 @@ public class ProductManagementService {
                 }
             }
         }
-
+        System.out.println(shelfRepo.findAll());
 
     }
 
@@ -180,7 +179,13 @@ public class ProductManagementService {
         e.setShelfEntity(shelf.orElseThrow(
                 () -> new Exception("Shelf with id "+idShelf+" doesn't exist")
         ));
-        productRepo.save(e);
+        this.productRepo.save(e);
+        shelf.get().setProductEntity(e);
+        this.shelfRepo.save(shelf.get());
+    }
+
+    public Iterable<ShelfEntity> getAllShelves() {
+        return this.shelfRepo.findAll();
     }
 
 
