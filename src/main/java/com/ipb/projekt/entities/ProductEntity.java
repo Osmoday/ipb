@@ -23,6 +23,10 @@ public class ProductEntity {
     @Column(name = "amount", nullable = false)
     private int amount;
 
+    @Basic(optional = true)
+    @Column(name = "manufacturer", nullable = true)
+    private String manufacturer;
+
     //TODO: zmień to na enuma, zobacz czy hibernate/mariadb to przeżyją
     @Basic(optional = false)
     @Column(name = "status", nullable = false)
@@ -112,5 +116,13 @@ public class ProductEntity {
 
     public void setSaleEntity(SaleEntity saleEntity) {
         this.saleEntity = saleEntity;
+    }
+
+    public String getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
     }
 }
