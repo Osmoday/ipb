@@ -18,7 +18,12 @@ public class ProductManagementService {
     private final ShelfRepo shelfRepo;
 
     @Autowired
-    public ProductManagementService(ProductRepo productRepo, AnnexRepo annexRepo, ClientRepo clientRepo, ReceivedFakturaRepo receivedFakturaRepo, CreatedFakturaRepo createdFakturaRepo, SaleRepo saleRepo, ShelfRepo shelfRepo) {
+    public ProductManagementService(ProductRepo productRepo,
+                                    AnnexRepo annexRepo,
+                                    ClientRepo clientRepo,
+                                    ReceivedFakturaRepo receivedFakturaRepo,
+                                    CreatedFakturaRepo createdFakturaRepo,
+                                    SaleRepo saleRepo, ShelfRepo shelfRepo) {
         this.productRepo = productRepo;
         this.annexRepo = annexRepo;
         this.clientRepo = clientRepo;
