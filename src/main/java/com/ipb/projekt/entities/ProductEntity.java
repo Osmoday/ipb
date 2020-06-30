@@ -44,6 +44,10 @@ public class ProductEntity {
     @JoinColumn(name = "id_sale")
     private SaleEntity saleEntity;
 
+    @OneToOne
+    @JoinColumn(name = "id_annex")
+    private AnnexEntity annexEntity;
+
     public ProductEntity() {
     }
 
@@ -124,5 +128,17 @@ public class ProductEntity {
 
     public void setManufacturer(String manufacturer) {
         this.manufacturer = manufacturer;
+    }
+
+    public AnnexEntity getAnnexEntity() {
+        return annexEntity;
+    }
+
+    public void setAnnexEntity(AnnexEntity annexEntity) {
+        this.annexEntity = annexEntity;
+    }
+
+    public boolean hasAnnex() {
+        return this.annexEntity != null;
     }
 }

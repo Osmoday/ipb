@@ -12,7 +12,9 @@
     width: 50px;
     height: 50px;
     margin: 10px;
-    background-color: beige;
+    text-align: center;
+    vertical-align: bottom;
+    /*background-color: beige;*/
     border-style: solid;
     border-width: 5px;
     border-color: black;
@@ -22,26 +24,46 @@
     background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 100 100' style='background: beige'><path d='M100 0 L0 100 ' stroke='red' stroke-width='10'/><path d='M0 0 L100 100 ' stroke='red' stroke-width='10'/></svg>") no-repeat center center;
     background-size: 100% 100%, auto;
     border-color: red;
+    color: red;
+    font-weight: bold;
 }
 
 .crossed1 {
     background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 100 100' style='background: azure'><path d='M100 0 L0 100 ' stroke='red' stroke-width='10'/><path d='M0 0 L100 100 ' stroke='red' stroke-width='10'/></svg>") no-repeat center center;
     background-size: 100% 100%, auto;
     border-color: red;
+    color: red;
+    font-weight: bold;
 }
 
 .crossed2 {
     background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 100 100' style='background: aquamarine'><path d='M100 0 L0 100 ' stroke='red' stroke-width='10'/><path d='M0 0 L100 100 ' stroke='red' stroke-width='10'/></svg>") no-repeat center center;
     background-size: 100% 100%, auto;
     border-color: red;
+    color: red;
+    font-weight: bold;
+}
+
+.active {
+    border-width: 7px;
+    border-color: green;
+    background: darkseagreen;
+    color: green;
+    font-weight: bolder;
+}
+
+.l0 {
+    background: beige;
 }
 
 .l1 {
     display: none;
+    background: azure;
 }
 
 .l2 {
     display: none;
+    background: aquamarine;
 }
 
 .c0 {

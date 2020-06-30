@@ -16,6 +16,7 @@ import java.util.Optional;
 @Service
 public class ProductManagementService {
 
+
     private final ProductRepo productRepo;
     private final AnnexRepo annexRepo;
     private final ClientRepo clientRepo;
@@ -23,6 +24,35 @@ public class ProductManagementService {
     private final CreatedFakturaRepo createdFakturaRepo;
     private final SaleRepo saleRepo;
     private final ShelfRepo shelfRepo;
+
+
+    public ProductRepo getProductRepo() {
+        return productRepo;
+    }
+
+    public AnnexRepo getAnnexRepo() {
+        return annexRepo;
+    }
+
+    public ClientRepo getClientRepo() {
+        return clientRepo;
+    }
+
+    public ReceivedFakturaRepo getReceivedFakturaRepo() {
+        return receivedFakturaRepo;
+    }
+
+    public CreatedFakturaRepo getCreatedFakturaRepo() {
+        return createdFakturaRepo;
+    }
+
+    public SaleRepo getSaleRepo() {
+        return saleRepo;
+    }
+
+    public ShelfRepo getShelfRepo() {
+        return shelfRepo;
+    }
 
     @Autowired
     public ProductManagementService(ProductRepo productRepo,

@@ -13,18 +13,84 @@
 </head>
 <body>
 <div class="container">
+    <form th:action="@{/add/product/insert}" method="post">
+        <div class="form-group">
+            <label for="name">Nazwa produktu</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Nazwa produktu">
+        </div>
+        <div class="form-group">
+            <label for="serialNumber">Numer seryjny</label>
+            <input type="text" class="form-control" id="serialNumber" name="serialNumber" placeholder="Numer seryjny">
+        </div>
+        <div class="form-group">
+            <label for="amount">Liczba produktów w opakowaniu</label>
+            <input type="text" class="form-control" id="amount" name="amount" placeholder="Liczba produktów w opakowaniu">
+        </div>
+        <div class="form-group">
+            <label for="status">Status</label>
+            <input type="text" class="form-control" id="status" name="status" placeholder="Nowe/pozwrotowe">
+        </div>
+        <input id="idShelf" name="idShelf" type="hidden" value="-1">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <hr />
+
     <div class="container2">
         <tr th:each="shelf : ${shelves}">
-            <div th:id="${shelf.idShelf}" th:class="${shelf.getCssTags()}">
+            <div th:id="${shelf.idShelf}" th:class="${shelf.getCssTags()}" >
+                <a th:unless="${shelf.isEmpty()}" data-toggle="modal" th:data-target="'#details_'+${shelf.idShelf}" style="position: absolute; width: 100%; height: 100%;"></a>
+                <span th:text="${shelf.idShelf}"></span>
             </div>
         </tr>
     </div>
+    <hr />
+
     <div class="container1">
         <button class="btn btn-primary" role="button" onclick="level1()" style="background: beige; border: black; color: black">Poziom 1</button>
         <button class="btn btn-primary" role="button" onclick="level2()" style="background: azure; border: black; color: black">Poziom 2</button>
         <button class="btn btn-primary" role="button" onclick="level3()" style="background: aquamarine; border: black; color: black">Poziom 3</button>
     </div>
 </div>
+
+<div th:each="shelf : ${shelves}" th:unless="${shelf.isEmpty()}" th:id="'details_'+${shelf.idShelf}" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" th:text="'Produkt nr. '+${shelf.getProductEntity().idProduct}"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><b>Nazwa produktu</b></p>
+                <p th:text="${shelf.getProductEntity().name}"></p>
+                <hr/>
+                <p><b>Numer seryjny</b></p>
+                <p th:text="${shelf.getProductEntity().serialNumber}"></p>
+                <hr/>
+                <p><b>Liczba produktów w opakowaniu</b></p>
+                <p th:text="${shelf.getProductEntity().amount}"></p>
+                <hr/>
+                <p><b>Status</b></p>
+                <p th:text="${shelf.getProductEntity().status}"></p>
+                <hr/>
+                <p><b>Aneks</b></p>
+                <p th:if="${shelf.getProductEntity().hasAnnex()}" th:text="${shelf.getProductEntity().getAnnexEntity().info}"></p>
+                <p th:unless="${shelf.getProductEntity().hasAnnex()}">Aneks jest pusty</p>
+                <form method="post" th:action="@{/add/product/annex}">
+                    <input type="text" name="info" placeholder="Podaj nowe informacje do aneksu" />
+                    <button type="submit" class="btn btn-primary">Wyślij</button>
+                    <input type="hidden" name="idProduct" th:value="${shelf.getProductEntity().idProduct}"/>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 <script>
     function level1() {
@@ -46,7 +112,9 @@
     $(".empty_shelf").click(function () {
         // assign class to denote that the shelf is chosen visually
         // and change the hidden form input to reflect the id
-        //$( this ).
+        $(".shelf").removeClass("active");
+        $( this ).addClass("active");
+        $("#idShelf").val($( this ).attr("id"))
     });
 </script>
 </html>

@@ -24,13 +24,16 @@ public class AnnexEntity {
     @JoinColumn(name = "id_sale")
     private SaleEntity saleEntity;
 
+    @OneToOne
+    @JoinColumn(name="id_product")
+    private ProductEntity productEntity;
+
     public AnnexEntity() {
     }
 
-    public AnnexEntity(LocalDate date, String info, SaleEntity saleEntity) {
+    public AnnexEntity(LocalDate date, String info) {
         this.date = date;
         this.info = info;
-        this.saleEntity = saleEntity;
     }
 
     public int getIdAnnex() {
@@ -63,5 +66,13 @@ public class AnnexEntity {
 
     public void setSaleEntity(SaleEntity saleEntity) {
         this.saleEntity = saleEntity;
+    }
+
+    public ProductEntity getProductEntity() {
+        return productEntity;
+    }
+
+    public void setProductEntity(ProductEntity productEntity) {
+        this.productEntity = productEntity;
     }
 }
