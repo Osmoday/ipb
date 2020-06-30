@@ -37,48 +37,49 @@ public class BrowseController {
         Iterable<ProductEntity> products = this.productManagementService.getAllProducts();
         ArrayList<ProductEntity> productsFinal = new ArrayList<>();
         for (ProductEntity productEntity : products) {
-            if (similarity(productEntity.getName(), searchString) > 0.5) {
+            boolean flag = true;
+            if (similarity(productEntity.getName(), searchString) > 0.5 && flag) {
                 productsFinal.add(productEntity);
-                break;
+                flag = false;
             }
-            if (similarity(productEntity.getStatus(), searchString) > 0.5) {
+            if (similarity(productEntity.getStatus(), searchString) > 0.5 && flag) {
                 productsFinal.add(productEntity);
-                break;
+                flag = false;
             }
-            if (similarity(productEntity.getSerialNumber(), searchString) > 0.5) {
+            if (similarity(productEntity.getSerialNumber(), searchString) > 0.5 && flag) {
                 productsFinal.add(productEntity);
-                break;
+                flag = false;
             }
-            if (similarity(String.valueOf(productEntity.getAmount()), searchString) > 0.5) {
+            if (similarity(String.valueOf(productEntity.getAmount()), searchString) > 0.5 && flag) {
                 productsFinal.add(productEntity);
-                break;
+                flag = false;
             }
             if (productEntity.getAnnexEntity() != null) {
-                if (similarity(productEntity.getAnnexEntity().getInfo(), searchString) > 0.5) {
+                if (similarity(productEntity.getAnnexEntity().getInfo(), searchString) > 0.5 && flag) {
                     productsFinal.add(productEntity);
-                    break;
+                    flag = false;
                 }
-                if (similarity(String.valueOf(productEntity.getAnnexEntity().getDate()), searchString) > 0.5) {
+                if (similarity(String.valueOf(productEntity.getAnnexEntity().getDate()), searchString) > 0.5 && flag) {
                     productsFinal.add(productEntity);
-                    break;
+                    flag = false;
                 }
             }
             if (productEntity.getShelfEntity() != null) {
-                if (similarity(String.valueOf(productEntity.getShelfEntity().getIdShelf()), searchString) > 0.5) {
+                if (String.valueOf(productEntity.getShelfEntity().getIdShelf()).equals(searchString) && flag) {
                     productsFinal.add(productEntity);
-                    break;
+                    flag = false;
                 }
-                if (similarity(String.valueOf(productEntity.getShelfEntity().getLevel()), searchString) > 0.5) {
+                if (similarity(String.valueOf(productEntity.getShelfEntity().getLevel()), searchString) > 0.5 && flag) {
                     productsFinal.add(productEntity);
-                    break;
+                    flag = false;
                 }
-                if (similarity(String.valueOf(productEntity.getShelfEntity().getColumn()), searchString) > 0.5) {
+                if (similarity(String.valueOf(productEntity.getShelfEntity().getColumn()), searchString) > 0.5 && flag) {
                     productsFinal.add(productEntity);
-                    break;
+                    flag = false;
                 }
-                if (similarity(String.valueOf(productEntity.getShelfEntity().getRow()), searchString) > 0.5) {
+                if (similarity(String.valueOf(productEntity.getShelfEntity().getRow()), searchString) > 0.5 && flag) {
                     productsFinal.add(productEntity);
-                    break;
+                    flag = false;
                 }
             }
 
