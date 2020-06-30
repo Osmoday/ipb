@@ -141,4 +141,7 @@ public class ProductEntity {
     public boolean hasAnnex() {
         return this.annexEntity != null;
     }
+    public boolean hasFaktura() {
+        return this.receivedFakturaEntity != null;
+    }
 }

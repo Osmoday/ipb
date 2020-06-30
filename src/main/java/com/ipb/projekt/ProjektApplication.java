@@ -15,6 +15,9 @@ public class ProjektApplication {
     // or maybe just use a flexbox
 
     //TODO: replace jquery with plain javascript
+
+    //TODO: divorce the existence of products from being tied to shelves
+    // create a separate view for putting on shelves products which exist but aren't on any
     public static void main(String[] args) {
         SpringApplication.run(ProjektApplication.class, args);
     }

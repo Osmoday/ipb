@@ -215,5 +215,9 @@ public class ProductManagementService {
         return this.shelfRepo.findAll();
     }
 
+    public Iterable<ProductEntity> getAllProducts() {
+        return this.productRepo.findAll();
+    }
+
 
 }
