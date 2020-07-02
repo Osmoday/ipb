@@ -22,12 +22,9 @@ public class SaleEntity {
     @Column(name = "time", nullable = false)
     private LocalTime time;
 
-    @Basic(optional = false)
-    @Column(name = "cost", nullable = false)
-    private BigDecimal cost;
-
-    @OneToMany(mappedBy = "saleEntity")
-    private Collection<ProductEntity> productEntities;
+    @OneToOne
+    @JoinColumn(name = "id_product")
+    private ProductEntity productEntity;
 
     @OneToOne
     @JoinColumn(name = "id_annex")
@@ -37,19 +34,27 @@ public class SaleEntity {
     @JoinColumn(name = "id_created_faktura")
     private CreatedFakturaEntity createdFakturaEntity;
 
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "id_client")
     private ClientEntity clientEntity;
 
     public SaleEntity() {
     }
 
-    public SaleEntity(LocalDate date, LocalTime time, BigDecimal cost,
-                      Collection<ProductEntity> productEntities) {
+    public SaleEntity(LocalDate date, LocalTime time,
+                      ProductEntity productEntity) {
         this.date = date;
         this.time = time;
-        this.cost = cost;
-        this.productEntities = productEntities;
+        this.productEntity = productEntity;
+    }
+
+
+    public SaleEntity(LocalDate date, LocalTime time,
+                      ProductEntity productEntity, ClientEntity client) {
+        this.date = date;
+        this.time = time;
+        this.productEntity = productEntity;
+        this.clientEntity = client;
     }
 
     public LocalDate getDate() {
@@ -68,28 +73,12 @@ public class SaleEntity {
         this.time = time;
     }
 
-    public BigDecimal getCost() {
-        return cost;
-    }
-
-    public void setCost(BigDecimal cost) {
-        this.cost = cost;
-    }
-
     public int getIdSale() {
         return idSale;
     }
 
     public void setIdSale(int idSale) {
         this.idSale = idSale;
-    }
-
-    public Collection<ProductEntity> getProductEntities() {
-        return productEntities;
-    }
-
-    public void setProductEntities(Collection<ProductEntity> productEntities) {
-        this.productEntities = productEntities;
     }
 
     public AnnexEntity getAnnexEntity() {
@@ -114,5 +103,13 @@ public class SaleEntity {
 
     public void setClientEntity(ClientEntity clientEntity) {
         this.clientEntity = clientEntity;
+    }
+
+    public ProductEntity getProductEntity() {
+        return productEntity;
+    }
+
+    public void setProductEntity(ProductEntity productEntity) {
+        this.productEntity = productEntity;
     }
 }

@@ -12,28 +12,6 @@
     <link th:href="@{/styles/main.css}" rel="stylesheet"/>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">System zarządzania sklepem</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="/">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/add/product">Dodaj produkt</a>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="/browse/product">Przeglądaj produkty <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/browse/sales">Przeglądaj zamówienia</a>
-            </li>
-        </ul>
-    </div>
-</nav>
 <div class="container">
 
     <div class="container2">
@@ -53,51 +31,39 @@
     </div>
 
 </div>
-
 <table class="table table-stripped">
     <thead>
     <tr>
-        <td>Id</td>
-        <td>Nazwa</td>
+        <td>Id zamówienia</td>
+        <td>Status</td>
+        <td>Id produktu</td>
+        <td>Nazwa produktu</td>
         <td>Numer seryjny</td>
         <td>Ilość</td>
-        <td>Status</td>
         <td>Id półki</td>
         <td>Lokalizacja półki</td>
-        <td>Nr faktury</td>
-        <td>Aneks</td>
-        <td>Usuń produkt?</td>
+        <td>Zakończ zamówienie</td>
     </tr>
     </thead>
-    <tr th:each="product:${products}">
-        <td th:text="${product.idProduct}"></td>
-        <td th:text="${product.name}"></td>
-        <td th:text="${product.serialNumber}"></td>
-        <td th:text="${product.amount}"></td>
-        <td th:text="${product.status}"></td>
-        <td th:if="${product.hasShelf()}" th:text="${product.getShelfEntity().idShelf}"></td>
-        <td th:unless="${product.hasShelf()}" >Brak półki</td>
-        <td th:if="${product.hasShelf()}" th:text="${'Kolumna '+product.getShelfEntity().column+', rząd '+product.getShelfEntity().row+', poziom '+product.getShelfEntity().level}"></td>
-        <td th:unless="${product.hasShelf()}" >Brak półki</td>
-        <td th:if="${product.hasFaktura()}" th:text="${product.getReceivedFakturaEntity().fakturaNumber}"></td>
-        <td th:unless="${product.hasFaktura()}">Brak przypisanej faktury</td>
-        <td th:if="${product.hasShelf()}"><button type="button" class="btn btn-secondary" data-toggle="modal" th:data-target="'#annex_'+${product.getShelfEntity().idShelf}">Zobacz aneks</button></td>
-        <td th:unless="${product.hasShelf()}"></td>
+    <tr >
+        <td th:text="${sale.idSale}"></td>
+        <td th:text="${thisProduct.status}"></td>
+        <td th:text="${thisProduct.idProduct}"></td>
+        <td th:text="${thisProduct.name}"></td>
+        <td th:text="${thisProduct.serialNumber}"></td>
+        <td th:text="${thisProduct.amount}"></td>
+        <td th:if="${sale.getProductEntity().hasShelf()}" th:text="${sale.getProductEntity().getShelfEntity().idShelf}"></td>
+        <td th:unless="${sale.getProductEntity().hasShelf()}" >Brak półki</td>
+        <td th:if="${sale.getProductEntity().hasShelf()}" th:text="${'Kolumna '+sale.getProductEntity().getShelfEntity().column+', rząd '+sale.getProductEntity().getShelfEntity().row+', poziom '+sale.getProductEntity().getShelfEntity().level}"></td>
+        <td th:unless="${sale.getProductEntity().hasShelf()}" >Brak półki</td>
         <td>
-            <form th:action="@{/remove/product}" method="post">
-                <input type="hidden" name="idProduct" th:value="${product.idProduct}"/>
-                <button class="btn btn-danger">Delete</button>
+            <form th:action="@{/finish/sale}" method="get">
+                <input type="hidden" name="idSale" th:value="${sale.idSale}"/>
+                <button class="btn btn-danger">Realizuj zamówienie</button>
             </form>
         </td>
     </tr>
 </table>
-
-<form class="form-inline" method="get" th:action="@{/browse/product/search}">
-    <i class="fas fa-search" aria-hidden="true"></i>
-    <input class="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search"
-           aria-label="Search" name="searchString">
-</form>
-
 <div th:each="shelf : ${shelves}" th:unless="${shelf.isEmpty()}" th:id="'details_'+${shelf.idShelf}" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

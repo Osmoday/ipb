@@ -1,5 +1,6 @@
 package com.ipb.projekt.controllers;
 
+import com.ipb.projekt.entities.ClientEntity;
 import com.ipb.projekt.entities.ProductEntity;
 import com.ipb.projekt.entities.SaleEntity;
 import com.ipb.projekt.entities.ShelfEntity;
@@ -8,68 +9,116 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Optional;
 
 @Controller
-public class BrowseController {
+public class ClientController {
 
-    final ProductManagementService productManagementService;
+    private final ProductManagementService productManagementService;
 
     @Autowired
-    public BrowseController(ProductManagementService productManagementService) {
+    public ClientController(ProductManagementService productManagementService) {
         this.productManagementService = productManagementService;
     }
 
-    @GetMapping("/browse/product")
-    public String browseProduct(Model model) {
+    @GetMapping("/client")
+    public String getClient() {
+        return "client";
+    }
+
+    @GetMapping("/client/buy")
+    public String getBuy(Model model) {
         Iterable<ShelfEntity> shelves = this.productManagementService.getAllShelves();
         Iterable<ProductEntity> products = this.productManagementService.getAllProducts();
         model.addAttribute("shelves", shelves);
         model.addAttribute("products", products);
-        return "browseProduct";
+        return "buy";
     }
 
-    @GetMapping("/browse/sales")
-    public String browseSales(Model model) {
-        model.addAttribute("sales", productManagementService.getSaleRepo().findAll());
-        return "browseSales";
-    }
-
-    @GetMapping("/sale")
-    public String sale(@RequestParam(name = "idSale") Integer idSale, Model model) {
-        Optional<SaleEntity> saleEntityOptional = productManagementService.getSaleRepo().findById(idSale);
-        if (saleEntityOptional.isPresent()) {
-            model.addAttribute("sale", saleEntityOptional.get());
-            model.addAttribute("thisProduct", saleEntityOptional.get().getProductEntity());
-            model.addAttribute("shelves", productManagementService.getAllShelves());
-            model.addAttribute("products", productManagementService.getAllProducts());
-            return "sale";
+    @PostMapping("/buy/product")
+    public String buyProduct(@RequestParam(name = "idProduct") int idProduct, Model model) {
+        Optional<ProductEntity> product = this.productManagementService.getProductRepo().findById(idProduct);
+        if (product.isPresent()) {
+            model.addAttribute("product", product.get());
+            return "order";
         }
         return "error";
     }
 
-    @GetMapping("/finish/sale")
-    public String finishSale(@RequestParam(name = "idSale") Integer idSale, Model model) {
-        Optional<SaleEntity> saleEntityOptional = productManagementService.getSaleRepo().findById(idSale);
+    @PostMapping("/buy/product/confirm")
+    public String buyProductConfirm(@RequestParam(name = "idProduct") int idProduct,
+                                    @RequestParam(name = "name", defaultValue = "", required = false) String name,
+                                    @RequestParam(name = "surname", defaultValue = "", required = false) String surname,
+                                    @RequestParam(name = "nip", defaultValue = "", required = false) String nip,
+                                    Model model) {
+        Optional<ProductEntity> productO = this.productManagementService.getProductRepo().findById(idProduct);
+        if (productO.isPresent()) {
+            ProductEntity product = productO.get();
+            if (product.getShelfEntity() == null) {
+                return "productNotAvailable";
+            } else if(!product.getStatus().equals("Przetwarzane") && !product.getStatus().equals("Zakonczone") && !product.getStatus().equals("Do odbioru")) {
+                product.setStatus("Przetwarzane");
+                int saleId = 0;
+                if (!name.equals("") && !surname.equals("") && !nip.equals("")) {
+                    ClientEntity clientEntity = new ClientEntity(name, surname, nip);
+                    SaleEntity saleEntity = new SaleEntity(LocalDate.now(), LocalTime.now(), product, clientEntity);
+                    clientEntity.addSaleEntities(saleEntity);
+                    product.setSaleEntity(saleEntity);
+                    this.productManagementService.getSaleRepo().save(saleEntity);
+                    this.productManagementService.getClientRepo().save(clientEntity);
+                    saleId = this.productManagementService.getProductRepo().findById(idProduct).get().getSaleEntity().getIdSale();
+                } else {
+                    SaleEntity saleEntity = new SaleEntity(LocalDate.now(), LocalTime.now(), product);
+                    product.setSaleEntity(saleEntity);
+                    this.productManagementService.getSaleRepo().save(saleEntity);
+                    saleId = this.productManagementService.getProductRepo().findById(idProduct).get().getSaleEntity().getIdSale();
+                }
+                this.productManagementService.getProductRepo().save(product);
+                return "redirect:/order/get?id="+saleId;
+            } else {
+                return "productNotAvailable";
+            }
+        }
+        return "error";
+    }
+
+    @GetMapping("/order/get")
+    public String orderGet(@RequestParam(name = "id") int idSale, Model model) {
+        Optional<SaleEntity> saleEntityOptional = this.productManagementService.getSaleRepo().findById(idSale);
         if (saleEntityOptional.isPresent()) {
             SaleEntity saleEntity = saleEntityOptional.get();
             ProductEntity productEntity = saleEntity.getProductEntity();
-            ShelfEntity shelfEntity = productEntity.getShelfEntity();
-            productEntity.setStatus("Do odbioru");
-            productEntity.setShelfEntity(null);
-            shelfEntity.setProductEntity(null);
-            productManagementService.getShelfRepo().save(shelfEntity);
-            productManagementService.getProductRepo().save(productEntity);
-            productManagementService.getSaleRepo().save(saleEntity);
-            return "redirect:/browse/sales";
+            model.addAttribute("sale", saleEntity);
+            model.addAttribute("product", productEntity);
+            return "orderGet";
         }
         return "error";
     }
 
-    @GetMapping("/browse/product/search")
+    @PostMapping("/order/finish")
+    public String orderFinish(@RequestParam(name = "idProduct") int idProduct,
+                              @RequestParam(name = "idSale") int idSale,
+                              Model model) {
+        Optional<SaleEntity> saleEntityOptional = this.productManagementService.getSaleRepo().findById(idSale);
+        if (saleEntityOptional.isPresent()) {
+            SaleEntity saleEntity = saleEntityOptional.get();
+            ProductEntity productEntity = saleEntity.getProductEntity();
+            productEntity.setStatus("Zakonczone");
+            productManagementService.getProductRepo().save(productEntity);
+            model.addAttribute("sale", saleEntity);
+            model.addAttribute("product", productEntity);
+            return "redirect:/order/get?id="+idSale;
+        }
+        return "error";
+    }
+
+    @GetMapping("/client/search")
     public String browseProductSearch(@RequestParam(name = "searchString") String searchString,
                                       Model model) {
         Iterable<ShelfEntity> shelves = this.productManagementService.getAllShelves();
@@ -125,7 +174,7 @@ public class BrowseController {
         }
         model.addAttribute("shelves", shelves);
         model.addAttribute("products", productsFinal);
-        return "browseProduct";
+        return "buy";
     }
 
 
@@ -167,4 +216,5 @@ public class BrowseController {
         }
         return costs[s2.length()];
     }
+
 }

@@ -1,6 +1,7 @@
 package com.ipb.projekt.entities;
 
 import javax.persistence.*;
+import java.util.ArrayDeque;
 import java.util.Collection;
 
 @Entity
@@ -23,7 +24,7 @@ public class ClientEntity {
     @Column(name = "nip", nullable = true)
     private String NIP;
 
-    @OneToMany(mappedBy = "clientEntity")
+    @OneToMany(mappedBy = "clientEntity", cascade=CascadeType.ALL)
     private Collection<SaleEntity> saleEntities;
 
     public ClientEntity() {
@@ -33,6 +34,7 @@ public class ClientEntity {
         this.name = name;
         this.surname = surname;
         NIP = nip;
+        this.saleEntities = new ArrayDeque<>();
     }
 
     public int getIdClient() {
@@ -71,7 +73,7 @@ public class ClientEntity {
         return saleEntities;
     }
 
-    public void setSaleEntities(Collection<SaleEntity> saleEntities) {
-        this.saleEntities = saleEntities;
+    public void addSaleEntities(SaleEntity saleEntity) {
+        this.saleEntities.add(saleEntity);
     }
 }

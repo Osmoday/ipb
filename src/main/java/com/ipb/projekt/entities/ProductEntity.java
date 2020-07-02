@@ -40,7 +40,7 @@ public class ProductEntity {
     @JoinColumn(name = "id_shelf")
     private ShelfEntity shelfEntity;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "id_sale")
     private SaleEntity saleEntity;
 
@@ -143,5 +143,8 @@ public class ProductEntity {
     }
     public boolean hasFaktura() {
         return this.receivedFakturaEntity != null;
+    }
+    public boolean hasShelf() {
+        return this.shelfEntity != null;
     }
 }
